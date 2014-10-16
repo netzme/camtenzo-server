@@ -1,0 +1,19 @@
+{
+    "name" : "Camtenzo-Server",
+    "version" : "0.0.1",
+    "private" : true,
+    "author" : {
+        "name" : "PT. QUANTUMFIN"
+    },
+    "contributors": [
+        {
+            "name" : "Untung Ginardi",
+            "email" : "untung@quantumfin.com"
+        }
+    ],
+    "dependencies" : {
+        "express" : "4.9.7",
+        "expect.js" : "0.3.1",
+        "mongoose" : "3.8.17"
+    }
+}
