@@ -7,8 +7,6 @@ var router = express.Router();
 var photoIdReq = null;
 var dummyData = require("../../test/DummyPhotoData");
 
-var userValidator = require("../models/UserValidator");
-
 router.route('/:user/*')
     .get(function(req, res, next){
         var params = req.params[0];
@@ -16,9 +14,6 @@ router.route('/:user/*')
             "user" : req.params.user,
             "data" : dummyData
         };
-
-        // validate user
-        var validUser = new userValidator(req.params.user)
 
         photoIdReq = params ? params : null;
         res.end(JSON.stringify(returnData));
