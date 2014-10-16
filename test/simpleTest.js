@@ -4,14 +4,16 @@
 var expect = require("expect.js");
 var http = require("http");
 
-var server = require("../index");
+var app = require("../index");
 var serverListenPort = 3000;
+var server = null;
 
 /**
  * Setup
  */
-before(function(){
-    server.listen(serverListenPort);
+before(function(done){
+    server = app.listen(serverListenPort);
+    done();
 });
 
 describe("Simple testing server", function(){
@@ -22,5 +24,10 @@ describe("Simple testing server", function(){
             done();
         });
     });
+});
+
+after(function(done){
+    server.close();
+    done();
 });
 

@@ -4,10 +4,12 @@
 var expect = require("expect.js");
 var http = require("http");
 
-var server = require("../index");
+var app = require("../index");
+var server = null;
 
-before(function(){
-    server.listen(3000);
+before(function(done){
+    server = app.listen(3001);
+    done();
 });
 
 describe("Photo service API", function(){
@@ -24,4 +26,9 @@ describe("Photo service API", function(){
             });
         });
     });
+});
+
+after(function(done){
+    server.close();
+    done();
 });
