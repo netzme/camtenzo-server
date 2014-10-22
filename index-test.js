@@ -1,5 +1,5 @@
 /**
- * Created by untung on 15/10/14.
+ * Created by untung on 22/10/14.
  */
 // Server setup
 var express = require("express"),
@@ -15,11 +15,11 @@ app.use(bodyParser.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-var env = require("./conf/config");
+var env = require("./conf/config-test");
 
 // Database setup
 var mongoose = require("mongoose"),
-    dbURL = "mongodb://localhost/camtenzoDb";
+    dbURL = "mongodb://localhost/camtenzoDbTest";
 mongoose.connect(dbURL);
 
 // Routes / Entry poiny

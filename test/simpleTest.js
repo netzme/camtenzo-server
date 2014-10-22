@@ -4,9 +4,9 @@
 var expect = require("expect.js");
 var http = require("http");
 
-var env = require("../conf/env");
-var app = env.test.app;
-var port = env.test.port;
+var env = require("../conf/config-test");
+var app = env.app;
+var port = env.port;
 var server = null;
 
 describe("Simple testing server", function(){

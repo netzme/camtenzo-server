@@ -12,8 +12,9 @@
         }
     ],
     "dependencies" : {
-        "express" : "4.9.7",
-        "expect.js" : "0.3.1",
-        "mongoose" : "3.8.17"
+        "express" : "~4.9.7",
+        "expect.js" : "~0.3.1",
+        "mongoose" : "~3.8.17",
+        "body-parser": "~1.9.0"
     }
 }
