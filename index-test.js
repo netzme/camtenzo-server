@@ -5,11 +5,15 @@
 var express = require("express"),
     app = new express(),
     path = require("path"),
-    bodyParser = require("body-parser");
+    bodyParser = require("body-parser"),
+    multer  = require('multer');
 
 // Body Parser Setup
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Temporary uploaded file Setup
+app.use(multer({dest: '/tmp/'}));
 
 // Setup view
 app.set('views', path.join(__dirname, 'views'));

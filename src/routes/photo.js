@@ -3,6 +3,8 @@
  */
 var express = require('express');
 var router = express.Router();
+var fs = require("fs");
+var qs = require("querystring");
 
 var photoIdReq = null;
 var modelUserPhoto = require("../models/UserPhoto");
@@ -14,8 +16,11 @@ router.route('/:user')
             res.json(data);
         });
     })
-    .post(function(req, res,next){
-        next(new Error('Not Implemented yet.'));
+    .post(function(req, res, next){
+        var tmpUploadFile = req.files.post_item.path;
+        var pathUpload = '/data/project/node/camtenzo-server/assets/upload/';
+        fs.createReadStream(tmpUploadFile).pipe(fs.createWriteStream(pathUpload + req.files.post_item.originalname));
+        res.end();
     });
 
 router.route('/:user/:photo_id')

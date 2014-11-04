@@ -60,20 +60,16 @@ describe("Photo service API", function(){
 
     var url3 = "http://localhost:" + port + "/photo/daori";
     describe("When POST url " + url3, function(){
-        var pathUpload = __dirname + "/dummyUploadImageDir";
+        var pathUpload = '/data/project/node/camtenzo-server/assets/upload/';
         var formData = new FormData();
         formData.append('post_item', fs.createReadStream(__dirname + "/dummyPostImageData/dummy_photo_1.png"));
         var postOptions = {host: 'localhost', 'port': port, path: '/photo/daori', method: 'post'};
 
         it("should upload file to upload path in " + pathUpload, function(done){
-            var request = http.request(postOptions);
-            formData.pipe(request);
-            request.on('response', function(res){
-                expect(fs.existsSync(pathUpload + "/dummy_photo_1.png")).to.be.equal(true);
-            });
-            request.on('end', function(){
+            formData.submit(url3, function(err, res){
+                expect(fs.existsSync(pathUpload + "dummy_photo_1.png")).to.be.equal(true);
                 done();
-            });
+            })
         });
         it("should save data to database with username 'daori'");
         it("should return message success if process");
