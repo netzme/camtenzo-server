@@ -4,6 +4,9 @@
 var expect = require("expect.js");
 var http = require("http");
 
+var fs = require("fs");
+var FormData = require("form-data");
+
 var env = require("../conf/config-test");
 var app = env.app;
 var port = env.port;
@@ -53,6 +56,27 @@ describe("Photo service API", function(){
                 });
             });
         });
+    });
+
+    var url3 = "http://localhost:" + port + "/photo/daori";
+    describe("When POST url " + url3, function(){
+        var pathUpload = __dirname + "/dummyUploadImageDir";
+        var formData = new FormData();
+        formData.append('post_item', fs.createReadStream(__dirname + "/dummyPostImageData/dummy_photo_1.png"));
+        var postOptions = {host: 'localhost', 'port': port, path: '/photo/daori', method: 'post'};
+
+        it("should upload file to upload path in " + pathUpload, function(done){
+            var request = http.request(postOptions);
+            formData.pipe(request);
+            request.on('response', function(res){
+                expect(fs.existsSync(pathUpload + "/dummy_photo_1.png")).to.be.equal(true);
+            });
+            request.on('end', function(){
+                done();
+            });
+        });
+        it("should save data to database with username 'daori'");
+        it("should return message success if process");
     });
 
     after(function(){

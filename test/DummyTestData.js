@@ -4,8 +4,12 @@
 // Models
 var userPhoto = require("../src/models/UserPhoto");
 
+// Library
+var fs = require("fs"),
+    path = require("path");
+
 // Photo User test data
-exports.initPhotoUserTestData = function() {
+exports.initPhotoUserTestData = function () {
     userPhoto.remove({}, function (err) {
         console.log('clean data test..');
     });
@@ -37,4 +41,18 @@ exports.initPhotoUserTestData = function() {
         "caption": "narsis 4"
     });
     PhotoDao4.save();
+}
+
+// Dummy form data request post photo
+exports.removeUploadedTestPhoto = function () {
+    var pathUpload = __dirname + "/dummyUploadImageDir/";
+    fs.readdir(pathUpload, function (err, list) {
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        list.foreach(function (file){
+            fs.unlinkSync(pathUpload + filename);
+        })
+    });
 }

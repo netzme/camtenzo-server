@@ -5,7 +5,7 @@
 var express = require("express"),
     app = new express(),
     path = require("path"),
-    bodyParser = require("body-parser");
+    bodyParser = require("body-parser"),
 
 // Body Parser Setup
 app.use(bodyParser.urlencoded({ extended: true }));

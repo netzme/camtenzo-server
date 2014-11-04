@@ -15,6 +15,8 @@
         "express" : "~4.9.7",
         "expect.js" : "~0.3.1",
         "mongoose" : "~3.8.17",
-        "body-parser": "~1.9.0"
+        "body-parser": "~1.9.0",
+        "form-data": "~0.1.4",
+        "formidable": "~1.0.15"
     }
 }
