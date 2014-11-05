@@ -7,7 +7,6 @@ var http = require("http");
 var fs = require("fs");
 var FormData = require("form-data");
 
-//var env = require("../conf/config-test");
 var app = require('../index');
 var port = process.env.NODE_PORT || 3000;
 var server = null;
@@ -18,6 +17,7 @@ describe("Photo service API", function(){
         // setup data test
         var dummyData = require("./DummyTestData");
         dummyData.initPhotoUserTestData();
+        dummyData.removeUploadedTestPhoto();
         // start server
         server = app.listen(port, function(){
             done();

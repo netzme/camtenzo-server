@@ -45,14 +45,18 @@ exports.initPhotoUserTestData = function () {
 
 // Dummy form data request post photo
 exports.removeUploadedTestPhoto = function () {
-    var pathUpload = __dirname + "/dummyUploadImageDir/";
+    var pathUpload = __dirname + "/uploadImageDir/";
     fs.readdir(pathUpload, function (err, list) {
         if (err) {
-            console.log(err);
-            throw err;
+            return err;
         }
-        list.foreach(function (file){
-            fs.unlinkSync(pathUpload + filename);
-        })
+        list.forEach(function (file){
+            console.log(file);
+            fs.unlink(pathUpload + file, function(err){
+                if (err) {
+                    return err;
+                }
+            });
+        });
     });
 }
