@@ -19,12 +19,15 @@ app.use(multer({dest: '/tmp/'}));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-var env = require("./conf/config");
+// Setup Environment
+var config = require("./conf/config"),
+    appConfig = config(app.get('env'));
+console.log(appConfig);
+app.set('pathUpload', appConfig.upload.pathUpload);
 
 // Database setup
-var mongoose = require("mongoose"),
-    dbURL = "mongodb://localhost/camtenzoDb";
-mongoose.connect(dbURL);
+var mongoose = require("mongoose");
+mongoose.connect(appConfig.db.url);
 
 // Routes / Entry poiny
 var main = require("./src/routes/index"),
@@ -33,6 +36,5 @@ var main = require("./src/routes/index"),
 app.use('/', main);
 app.use('/photo', photo);
 app.use('/user', user);
-
 
 module.exports = app;

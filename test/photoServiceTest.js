@@ -7,9 +7,9 @@ var http = require("http");
 var fs = require("fs");
 var FormData = require("form-data");
 
-var env = require("../conf/config-test");
-var app = env.app;
-var port = env.port;
+//var env = require("../conf/config-test");
+var app = require('../index');
+var port = process.env.NODE_PORT || 3000;
 var server = null;
 
 describe("Photo service API", function(){
@@ -60,14 +60,12 @@ describe("Photo service API", function(){
 
     var url3 = "http://localhost:" + port + "/photo/daori";
     describe("When POST url " + url3, function(){
-        var pathUpload = '/data/project/node/camtenzo-server/assets/upload/';
         var formData = new FormData();
         formData.append('post_item', fs.createReadStream(__dirname + "/dummyPostImageData/dummy_photo_1.png"));
-        var postOptions = {host: 'localhost', 'port': port, path: '/photo/daori', method: 'post'};
-
+        var pathUpload = app.get('pathUpload');
         it("should upload file to upload path in " + pathUpload, function(done){
             formData.submit(url3, function(err, res){
-                expect(fs.existsSync(pathUpload + "dummy_photo_1.png")).to.be.equal(true);
+                expect(fs.existsSync(pathUpload + "/dummy_photo_1.png")).to.be.equal(true);
                 done();
             })
         });

@@ -1,10 +1,26 @@
 /**
  * Created by untung on 16/10/14.
  */
-var Production = {
-    "host": "localhost",
-    "port": process.env.PORT || 3000,
-    "app": require("../index")
-};
-
-module.exports = Production;
+module.exports = function(env) {
+    var path = require('path');
+    if (env === 'production') {
+        return {
+            'upload': {
+                'pathUpload': path.resolve('assets/upload/')
+            },
+            'db': {
+                'url': "mongodb://localhost/camtenzoDb",
+            }
+        };
+    }
+    if (env === 'development') {
+       return {
+            'upload': {
+                'pathUpload': path.resolve('test/uploadImageDir/')
+            },
+            'db': {
+                'url': "mongodb://localhost/camtenzoDbTest",
+            }
+        }
+    }
+}

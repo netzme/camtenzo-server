@@ -18,8 +18,8 @@ router.route('/:user')
     })
     .post(function(req, res, next){
         var tmpUploadFile = req.files.post_item.path;
-        var pathUpload = '/data/project/node/camtenzo-server/assets/upload/';
-        fs.createReadStream(tmpUploadFile).pipe(fs.createWriteStream(pathUpload + req.files.post_item.originalname));
+        var pathUpload = req.app.settings.pathUpload;
+        fs.createReadStream(tmpUploadFile).pipe(fs.createWriteStream(pathUpload + '/' + req.files.post_item.originalname));
         res.end();
     });
 
