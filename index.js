@@ -22,7 +22,6 @@ app.set('view engine', 'jade');
 // Setup Environment
 var config = require("./conf/config"),
     appConfig = config(app.get('env'));
-console.log(appConfig);
 app.set('pathUpload', appConfig.upload.pathUpload);
 
 // Database setup
