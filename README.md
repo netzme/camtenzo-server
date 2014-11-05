@@ -46,3 +46,4 @@ npm install -g nodemon
 cd /path/to/camtenzo-server
 nodemon ./bin/www.js
 ```
+Using command above will auto-restart the server everytime the source code is modified.
