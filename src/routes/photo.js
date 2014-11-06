@@ -19,8 +19,25 @@ router.route('/:user')
     .post(function(req, res, next){
         var tmpUploadFile = req.files.post_item.path;
         var pathUpload = req.app.settings.pathUpload;
-        fs.createReadStream(tmpUploadFile).pipe(fs.createWriteStream(pathUpload + '/' + req.files.post_item.originalname));
-        res.end();
+        modelUserPhoto.getNextPhotoId(function(err, data){
+            if (err) {
+                res.json(err);
+            }
+            var savedFilename = 'NM_' + req.params.user + '_' + data.seq + '.' + req.files.post_item.extension;
+            fs.createReadStream(tmpUploadFile)
+                .pipe(fs.createWriteStream(pathUpload + '/' + savedFilename));
+            modelUserPhoto.create({
+                photo_id: data.seq,
+                username: req.params.user,
+                pathPhoto: pathUpload + '/' + savedFilename,
+                caption: null
+            }, function(err, savedData){
+                if (err) {
+                    res.json(err);
+                }
+                res.json({_id: savedData._id});
+            });
+        });
     });
 
 router.route('/:user/:photo_id')

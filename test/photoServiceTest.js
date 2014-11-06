@@ -16,11 +16,16 @@ describe("Photo service API", function(){
 
     before(function(done){
         // setup data test
-        dummyData.initPhotoUserTestData();
+        //dummyData.initPhotoUserTestData();
         // start server
         server = app.listen(port, function(){
             done();
         });
+    });
+
+    beforeEach(function(){
+        // setup data test
+        dummyData.initPhotoUserTestData();
     });
 
     var url1 = "http://localhost:" + port + "/photo/daori/1";
@@ -57,7 +62,7 @@ describe("Photo service API", function(){
         });
     });
 
-    describe("When POST url http://localhost:" + port + "/photo/daori", function(){
+    describe("When request POST http://localhost:" + port + "/photo/daori", function(){
         var pathUpload = app.get('pathUpload');
         var formData = {};
         it("should upload file to upload path in " + pathUpload, function(done){
@@ -65,12 +70,37 @@ describe("Photo service API", function(){
             formData = new FormData();
             formData.append('post_item', fs.createReadStream(__dirname + "/dummyPostImageData/dummy_photo_1.png"));
             formData.submit("http://localhost:" + port + "/photo/daori", function(err, res){
-                expect(fs.existsSync(pathUpload + "/dummy_photo_1.png")).to.be.equal(true);
-                done();
-            })
+                res.on('data', function(data) {
+                    var modelUserPhoto = require("../src/models/UserPhoto");
+                    modelUserPhoto.findOne({_id: JSON.parse(data.toString())._id}, function (err, userPhoto) {
+                        if (err) {
+                            return err;
+                        }
+                        expect(fs.existsSync(userPhoto.pathPhoto)).to.be.equal(true);
+                        done();
+                    });
+                });
+            });
         });
-        it("should save data to database with username 'daori'");
-        it("should return message success if process");
+        it("should save data to database with username 'daori'", function(done){
+            dummyData.removeUploadedTestPhoto();
+            formData = new FormData();
+            formData.append('post_item', fs.createReadStream(__dirname + "/dummyPostImageData/dummy_photo_1.png"));
+            formData.submit("http://localhost:" + port + "/photo/daori", function(err, res){
+                res.on('data', function(data){
+                    var modelUserPhoto = require("../src/models/UserPhoto");
+                    modelUserPhoto.findOne({_id: JSON.parse(data.toString())._id}, function(err, userPhoto){
+                        if (err) {
+                            return err;
+                        }
+                        expect(userPhoto).not.to.be(null);
+                        expect(userPhoto.username).to.be.equal('daori');
+                        done();
+                    });
+                });
+            });
+
+        });
     });
 
     after(function(){

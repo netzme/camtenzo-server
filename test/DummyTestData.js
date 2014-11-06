@@ -11,7 +11,9 @@ var fs = require("fs"),
 // Photo User test data
 exports.initPhotoUserTestData = function () {
     userPhoto.remove({}, function (err) {
-        console.log('clean data test..');
+        if (err) {
+            throw err;
+        }
     });
     var PhotoDao1 = new userPhoto({
         "photo_id": 1,
