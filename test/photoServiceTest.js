@@ -12,12 +12,11 @@ var port = process.env.NODE_PORT || 3000;
 var server = null;
 
 describe("Photo service API", function(){
+    var dummyData = require("./DummyTestData");
 
     before(function(done){
         // setup data test
-        var dummyData = require("./DummyTestData");
         dummyData.initPhotoUserTestData();
-        dummyData.removeUploadedTestPhoto();
         // start server
         server = app.listen(port, function(){
             done();
@@ -58,13 +57,14 @@ describe("Photo service API", function(){
         });
     });
 
-    var url3 = "http://localhost:" + port + "/photo/daori";
-    describe("When POST url " + url3, function(){
-        var formData = new FormData();
-        formData.append('post_item', fs.createReadStream(__dirname + "/dummyPostImageData/dummy_photo_1.png"));
+    describe("When POST url http://localhost:" + port + "/photo/daori", function(){
         var pathUpload = app.get('pathUpload');
+        var formData = {};
         it("should upload file to upload path in " + pathUpload, function(done){
-            formData.submit(url3, function(err, res){
+            dummyData.removeUploadedTestPhoto();
+            formData = new FormData();
+            formData.append('post_item', fs.createReadStream(__dirname + "/dummyPostImageData/dummy_photo_1.png"));
+            formData.submit("http://localhost:" + port + "/photo/daori", function(err, res){
                 expect(fs.existsSync(pathUpload + "/dummy_photo_1.png")).to.be.equal(true);
                 done();
             })
