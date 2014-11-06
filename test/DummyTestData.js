@@ -51,12 +51,13 @@ exports.removeUploadedTestPhoto = function () {
             return err;
         }
         list.forEach(function (file){
-            console.log(file);
-            fs.unlink(pathUpload + file, function(err){
-                if (err) {
-                    return err;
-                }
-            });
+            if (path.extname(file) !== '') {
+                fs.unlink(pathUpload + file, function(err){
+                    if (err) {
+                        return err;
+                    }
+                });
+            }
         });
     });
 }
