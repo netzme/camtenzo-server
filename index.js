@@ -30,10 +30,8 @@ mongoose.connect(appConfig.db.url);
 
 // Routes / Entry poiny
 var main = require("./src/routes/index"),
-    photo = require("./src/routes/photo"),
-    user = require("./src/routes/user");
+    photo = require("./src/routes/photo");
 app.use('/', main);
 app.use('/photo', photo);
-app.use('/user', user);
 
 module.exports = app;
