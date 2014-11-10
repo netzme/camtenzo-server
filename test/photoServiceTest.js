@@ -30,15 +30,21 @@ describe("Photo service API", function(){
 
     var url1 = "http://localhost:" + port + "/photo/daori/1";
     describe("When request GET " + url1, function(){
-        it("should return data username of 'daori' and photo_id of '1'", function(done){
+        it("should return same image binary'", function(done){
             http.get(url1, function(response){
-                response.on('data', function(data){
-                    var resData = JSON.parse(data.toString());
-                    expect(resData.username).to.be.equal('daori');
-                    expect(resData.photo_id).to.be.equal(1);
-                });
+                var tmpFile = '/tmp/' + Math.random();
+                response.pipe(fs.createWriteStream(tmpFile));
                 response.on('end', function(){
-                    done();
+                    var statResponse = fs.statSync(tmpFile);
+                    var modelUserPhoto = require("../src/models/UserPhoto");
+                    modelUserPhoto.findOne({photo_id: 1}, function (err, userPhoto) {
+                        if (err) {
+                            return err;
+                        }
+                        var testFileStat = fs.statSync(userPhoto.pathPhoto);
+                        expect(statResponse.size).to.be.equal(testFileStat.size)
+                        done();
+                    });
                 });
             });
         });
