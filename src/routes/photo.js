@@ -12,8 +12,10 @@ var modelUserPhoto = require("../models/UserPhoto");
 router.route('/:user')
     .get(function(req, res, next){
         modelUserPhoto.find({"username": req.params.user}, function(err, data){
-            if (err) { res.send(err); }
-            res.json(data);
+            if (err) {
+                return res.json({error: err});
+            }
+            return res.json(data);
         });
     })
     .post(function(req, res, next){
@@ -21,26 +23,29 @@ router.route('/:user')
         var pathUpload = req.app.settings.pathUpload;
         modelUserPhoto.getNextPhotoId(function(err, data){
             if (err) {
-                res.json(err);
+                return res.json(err);
             }
-            var savedFilename = 'NM_' + req.params.user + '_' + data.seq + '.' + req.files.post_item.extension;
+            var savedFilename = pathUpload + '/' + 'NM_' + req.params.user + '_' + data.seq + '.' + req.files.post_item.extension;
             fs.createReadStream(tmpUploadFile)
-                .pipe(fs.createWriteStream(pathUpload + '/' + savedFilename));
-            if (fs.existsSync(pathUpload + '/' + savedFilename)) {
-                modelUserPhoto.create({
-                    photo_id: data.seq,
-                    username: req.params.user,
-                    pathPhoto: pathUpload + '/' + savedFilename,
-                    caption: null
-                }, function(err, savedData){
-                    if (err) {
-                        res.json(err);
-                    }
-                    res.json({_id: savedData._id});
+                .pipe(fs.createWriteStream(savedFilename))
+                .on('error', function(err){
+                    return res.json({error: err});
+                })
+                .on('close', function(){
+                    fs.unlink(tmpUploadFile);
+                    modelUserPhoto.create({
+                        photo_id: data.seq,
+                        username: req.params.user,
+                        pathPhoto: savedFilename,
+                        caption: null
+                    }, function(err, savedData){
+                        if (err) {
+                            return res.json({error: err});
+                        } else {
+                            return res.json({_id: savedData._id});
+                        }
+                    });
                 });
-            } else {
-                res.json({error: 'Failed to copy data to server.'})
-            }
         });
     });
 
@@ -48,17 +53,16 @@ router.route('/:user/:photo_id')
     .get(function(req, res, next){
         modelUserPhoto.findOne({"username": req.params.user, "photo_id": req.params.photo_id}, function(err, data){
             if (err) {
-                res.json({error: err});
-            }
-            if (data === null) {
+                return res.json({error: err});
+            } else if (data === null) {
                 var e = new Error('Data not found.');
-                res.json({error: { message: e.message }});
+                return res.json({error: { message: e.message }});
             } else {
-                fs.readFile(data.pathPhoto, function(errImg, imageData){
-                    if (errImg) {
-                        res.json({error: errImg});
+                fs.readFile(data.pathPhoto, function (err, imageData) {
+                    if (err) {
+                        return res.json({error: err});
                     }
-                    res.end(imageData, 'binary');
+                    return res.end(imageData, 'binary');
                 });
             }
         });
